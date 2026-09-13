@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHIKO TOPUP</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6fb;
+      color: #222;
+    }
+
+    header {
+      background: #151a2e;
+      color: white;
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .login-btn {
+      background: white;
+      color: #151a2e;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 25px 15px;
+    }
+
+    .hero {
+      background: white;
+      border-radius: 18px;
+      padding: 30px 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin-bottom: 10px;
+    }
+
+    .games {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .game {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .game:hover,
+    .game.selected {
+      border-color: #4f46e5;
+    }
+
+    .game-icon {
+      font-size: 40px;
+      margin-bottom: 8px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 16px;
+      margin-top: 20px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .package {
+      border: 2px solid #ddd;
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .package.selected {
+      border-color: #4f46e5;
+      background: #f0f0ff;
+    }
+
+    .pay-btn {
+      width: 100%;
+      background: #4f46e5;
+      color: white;
+      margin-top: 15px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 420px;
+      padding: 25px;
+      border-radius: 18px;
+    }
+
+    .close {
+      float: right;
+      background: #eee;
+      padding: 6px 10px;
+    }
+
+    .payment {
+      border: 2px solid #ddd;
+      padding: 15px;
+      border-radius: 12px;
+      margin: 8px 0;
+      cursor: pointer;
+    }
+
+    .payment.selected {
+      border-color: #4f46e5;
+      background: #f0f0ff;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 12px;
+      background: #eef7ee;
+      border-radius: 10px;
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+    }
+
+    @media(max-width:600px) {
+      .games,
+      .packages {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🎮 CHIKO TOPUP</div>
+  <button class="login-btn" onclick="openLogin()">ເຂົ້າສູ່ລະບົບ</button>
+</header>
+
+<div class="container">
+
+  <section class="hero">
+    <h1>ຮ້ານເຕີມເກມອອນລາຍ</h1>
+    <p>ເຕີມເກມງ່າຍ • ໄວ • ປອດໄພ</p>
+  </section>
+
+  <div class="card">
+    <h2>🎮 ເລືອກເກມ</h2>
+
+    <div class="games">
+      <div class="game selected" onclick="selectGame(this, 'Free Fire')">
+        <div class="game-icon">🔥</div>
+        <b>Free Fire</b>
+      </div>
+
+      <div class="game" onclick="selectGame(this, 'PUBG Mobile')">
+        <div class="game-icon">🔫</div>
+        <b>PUBG Mobile</b>
+      </div>
+    </div>
+
+    <label>Game UID</label>
+    <input id="uid" type="text" placeholder="ໃສ່ UID ຂອງເຈົ້າ">
+
+    <h3>💎 ເລືອກແພັກເກດ</h3>
+
+    <div class="packages">
+      <div class="package" onclick="selectPackage(this, '100 Diamonds', 10000)">
+        💎 100 Diamonds<br>
+        <b>10,000 ກີບ</b>
+      </div>
+
+      <div class="package" onclick="selectPackage(this, '310 Diamonds', 25000)">
+        💎 310 Diamonds<br>
+        <b>25,000 ກີບ</b>
+      </div>
+
+      <div class="package" onclick="selectPackage(this, '520 Diamonds', 40000)">
+        💎 520 Diamonds<br>
+        <b>40,000 ກີບ</b>
+      </div>
+
+      <div class="package" onclick="selectPackage(this, '1060 Diamonds', 75000)">
+        💎 1060 Diamonds<br>
+        <b>75,000 ກີບ</b>
+      </div>
+    </div>
+
+    <button class="pay-btn" onclick="openPayment()">
+      ດຳເນີນການຊຳລະເງິນ
+    </button>
+  </div>
+
+</div>
+
+<footer>
+  CHIKO TOPUP © 2026
+</footer>
+
+
+<!-- LOGIN -->
+<div class="modal" id="loginModal">
+  <div class="modal-box">
+
+    <button class="close" onclick="closeLogin()">✕</button>
+
+    <h2>🔐 ເຂົ້າສູ່ລະບົບ</h2>
+
+    <input id="loginEmail" type="email"
+           placeholder="Email">
+
+    <input id="loginPassword" type="password"
+           placeholder="Password">
+
+    <button class="pay-btn" onclick="demoLogin()">
+      ເຂົ້າສູ່ລະບົບ
+    </button>
+
+    <p style="margin-top:15px;text-align:center">
+      ລະບົບ Login ນີ້ເປັນ Demo
+    </p>
+
+  </div>
+</div>
+
+
+<!-- PAYMENT -->
+<div class="modal" id="paymentModal">
+  <div class="modal-box">
+
+    <button class="close" onclick="closePayment()">✕</button>
+
+    <h2>💳 ຊຳລະເງິນ</h2>
+
+    <p id="orderInfo" style="margin:15px 0"></p>
+
+    <h3>ເລືອກວິທີຊຳລະ</h3>
+
+    <div class="payment" onclick="selectPayment(this)">
+      🏦 ໂອນຜ່ານທະນາຄານ / QR
+    </div>
+
+    <div class="payment" onclick="selectPayment(this)">
+      📱 Mobile Banking
+    </div>
+
+    <hr style="margin:15px 0">
+
+    <p>
+      ຫຼັງຈາກໂອນເງິນແລ້ວ ໃຫ້ໃສ່ເລກອ້າງອີງ:
+    </p>
+
+    <input id="transactionId"
+           placeholder="ເລກອ້າງອີງການໂອນ">
+
+    <button class="pay-btn" onclick="submitOrder()">
+      ຢືນຢັນການຊຳລະ
+    </button>
+
+    <div class="status" id="status">
+      ✅ ຮັບອໍເດີແລ້ວ!
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+
+  let selectedGame = "Free Fire";
+  let selectedPackage = "";
+  let selectedPrice = 0;
+  let selectedPayment = "";
+
+  function selectGame(element, game) {
+    document.querySelectorAll(".game")
+      .forEach(x => x.classList.remove("selected"));
+
+    element.classList.add("selected");
+    selectedGame = game;
+  }
+
+  function selectPackage(element, name, price) {
+    document.querySelectorAll(".package")
+      .forEach(x => x.classList.remove("selected"));
+
+    element.classList.add("selected");
+
+    selectedPackage = name;
+    selectedPrice = price;
+  }
+
+  function openLogin() {
+    document.getElementById("loginModal").style.display = "flex";
+  }
+
+  function closeLogin() {
+    document.getElementById("loginModal").style.display = "none";
+  }
+
+  function demoLogin() {
+    const email = document.getElementById("loginEmail").value;
+
+    if (!email) {
+      alert("ກະລຸນາໃສ່ Email");
+      return;
+    }
+
+    alert("ເຂົ້າສູ່ລະບົບ Demo ສຳເລັດ");
+    closeLogin();
+  }
+
+  function openPayment() {
+
+    const uid = document.getElementById("uid").value;
+
+    if (!uid) {
+      alert("ກະລຸນາໃສ່ Game UID");
+      return;
+    }
+
+    if (!selectedPackage) {
+      alert("ກະລຸນາເລືອກແພັກເກດ");
+      return;
+    }
+
+    document.getElementById("orderInfo").innerHTML =
+      "ເກມ: <b>" + selectedGame + "</b><br>" +
+      "UID: <b>" + uid + "</b><br>" +
+      "ແພັກເກດ: <b>" + selectedPackage + "</b><br>" +
+      "ລາຄາ: <b>" + selectedPrice.toLocaleString() + " ກີບ</b>";
+
+    document.getElementById("paymentModal").style.display = "flex";
+  }
+
+  function closePayment() {
+    document.getElementById("paymentModal").style.display = "none";
+  }
+
+  function selectPayment(element) {
+
+    document.querySelectorAll(".payment")
+      .forEach(x => x.classList.remove("selected"));
+
+    element.classList.add("selected");
+
+    selectedPayment = element.innerText;
+  }
+
+  function submitOrder() {
+
+    const transactionId =
+      document.getElementById("transactionId").value;
+
+    if (!selectedPayment) {
+      alert("ກະລຸນາເລືອກວິທີຊຳລະ");
+      return;
+    }
+
+    if (!transactionId) {
+      alert("ກະລຸນາໃສ່ເລກອ້າງອີງ");
+      return;
+    }
+
+    document.getElementById("status").style.display = "block";
+  }
+
+</script>
+
+</body>
+    </html>
